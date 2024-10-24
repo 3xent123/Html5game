@@ -32,10 +32,10 @@ var gameOver = false;
 
 // Grafik dosyalarını yüklüyoruz
 function preload() {
-    this.load.image('background', './background.png'); // Arka plan
-    this.load.image('player', 'https://github.com/3xent123/Html5game/Samurai.png'); // Oyuncu karakteri
-    this.load.image('trap', 'https://github.com/3xent123/Html5game/Trap.png'); // Tuzak
-    this.load.image('bomb', 'https://github.com/3xent123/Html5game/Bomb.png'); // Bomba
+    this.load.image('background', './Background.png'); // Arka plan
+    this.load.image('player', './Samurai.png'); // Oyuncu karakteri
+    this.load.image('trap', './Trap.png'); // Tuzak
+    this.load.image('bomb', './Bomb.png'); // Bomba
 }
 
 // Oyunu kuruyoruz
@@ -66,7 +66,7 @@ function create() {
 
     // Oyuncu karakterini ekliyoruz
     player = this.physics.add.sprite(100, 450, 'player');
-    player.setScale(0.02); // Karakterin boyutunu %0.007 oranında küçültüyoruz
+    player.setScale(0.02); // Karakterin boyutunu %0.02 oranında küçültüyoruz
     player.setBounce(0.2); // Zıpladıktan sonra sekme
     player.setCollideWorldBounds(true); // Ekran dışına çıkmasını engelle
 

@@ -20,6 +20,8 @@ var config = {
 var game = new Phaser.Game(config);
 
 // Oyun içi değişkenler
+var player;
+var cursors;
 var traps;
 var bombs;
 var score = 0;
@@ -31,6 +33,7 @@ var gameOver = false;
 // Grafik dosyalarını yüklüyoruz
 function preload() {
     this.load.image('background', 'https://3xent123.github.io/Html5game/Background.png'); // Arka plan
+    this.load.image('player', 'https://3xent123.github.io/Html5game/Samurai.png'); // Oyuncu karakteri
     this.load.image('trap', 'https://3xent123.github.io/Html5game/Trap.png'); // Tuzak
     this.load.image('bomb', 'https://3xent123.github.io/Html5game/Bomb.png'); // Bomba
 }
@@ -45,21 +48,11 @@ function create() {
     traps = this.physics.add.group();
     bombs = this.physics.add.group();
 
-    // Tuzakların rastgele düşmesi için zamanlayıcı ayarları (daha sık düşecek)
-    this.time.addEvent({
-        delay: 250, // Her 0.25 saniyede bir yeni tuzak düşecek
-        callback: dropTrap,
-        callbackScope: this,
-        loop: true
-    });
-
-    // Bombaların rastgele düşmesi için zamanlayıcı ayarları
-    this.time.addEvent({
-        delay: 1500, // Her 2 saniyede bir bomba düşecek
-        callback: dropBomb,
-        callbackScope: this,
-        loop: true
-    });
+    // Oyuncu karakterini ekliyoruz
+    player = this.physics.add.sprite(100, 450, 'player');
+    player.setScale(0.02); // Karakterin boyutunu %0.02 oranında küçültüyoruz
+    player.setBounce(0.2); // Zıpladıktan sonra sekme
+    player.setCollideWorldBounds(true); // Ekran dışına çıkmasını engelle
 
     // Puan metni (kalınlaştırıldı, renk siyah, font boyutu %10 küçültüldü)
     scoreText = this.add.text(16, 16, 'Skor: 0', { fontSize: '28px', fill: '#000', fontStyle: 'bold' });
@@ -81,17 +74,32 @@ function update() {
     if (gameOver) {
         return; // Eğer oyun bittiyse hiçbir şey yapılmasın
     }
+
+    // Mouse hareketine göre oyuncu karakterini x ekseninde hareket ettiriyoruz
+    if (this.input.activePointer.isDown) {
+        // Mouse'un x pozisyonunu alıyoruz ve karakterin x pozisyonunu mouse'un x pozisyonuna ayarlıyoruz
+        player.x = this.input.activePointer.x;
+
+        // İstersen karakteri sadece yavaşça mouse pozisyonuna doğru hareket ettirebilirsin
+        // player.x += (this.input.activePointer.x - player.x) * 0.1;
+    }
+
+    // Tuzaklarla çarpışma kontrolü
+    this.physics.add.overlap(player, traps, hitTrap, null, this);
+
+    // Bombalarla çarpışma kontrolü
+    this.physics.add.overlap(player, bombs, hitBomb, null, this);
 }
 
-// Tuzaklarla çarpışma fonksiyonu (Mouse tıklaması ile)
-function trapClicked(trap) {
+// Tuzaklarla çarpışma fonksiyonu
+function hitTrap(player, trap) {
     trap.disableBody(true, true); // Tuzak yok edilir
     score += 10; // Puan artırılır
     scoreText.setText('Skor: ' + score); // Skor güncellenir
 }
 
-// Bombalarla çarpışma fonksiyonu (Mouse tıklaması ile)
-function bombClicked(bomb) {
+// Bombalarla çarpışma fonksiyonu
+function hitBomb(player, bomb) {
     bomb.disableBody(true, true); // Bomba yok edilir
     score -= 20; // Puan azaltılır
     if (score < 0) score = 0; // Puan negatif olmasın
@@ -122,12 +130,6 @@ function dropTrap() {
     trap.setScale(randomScale); // Rastgele boyut uygulanıyor
     trap.setVelocityY(Phaser.Math.FloatBetween(50, 100)); // Aşağıya yavaş düşme hızı ayarlandı
     trap.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)); // Zıplama
-
-    // Mouse tıklaması ile tuzağa tıklayınca puan kazandırmak
-    trap.setInteractive();
-    trap.on('pointerdown', function() {
-        trapClicked(trap); // Tuzak tıklanınca fonksiyon çalışır
-    });
 }
 
 // Bombaları rastgele düşüren fonksiyon
@@ -138,10 +140,4 @@ function dropBomb() {
     let bomb = bombs.create(x, 0, 'bomb'); // Bomba oluşturuluyor
     bomb.setScale(0.2); // Bomba boyutu
     bomb.setVelocityY(Phaser.Math.FloatBetween(50, 100)); // Aşağıya yavaş düşme hızı ayarlandı
-
-    // Mouse tıklaması ile bombaya tıklayınca puan kaybettirmek
-    bomb.setInteractive();
-    bomb.on('pointerdown', function() {
-        bombClicked(bomb); // Bomba tıklanınca fonksiyon çalışır
-    });
 }

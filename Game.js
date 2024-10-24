@@ -34,13 +34,14 @@ function preload() {
 
 // Oyun yaratılıyor
 function create() {
-    // Arka planı ekliyoruz
-    this.add.image(400, 300, 'background');
+    // Arka planı ortalayarak sahneye ekliyoruz
+    this.add.image(400, 300, 'background'); // Arka plan
 
-    // Oyuncuyu fiziksel özelliklerle birlikte ekliyoruz
-    player = this.physics.add.sprite(100, 450, 'player');
-    player.setBounce(0.2); // Oyuncunun hafif bir sekme hareketi olsun
-    player.setCollideWorldBounds(true); // Oyuncu ekranın dışına çıkamasın
+    // Oyuncuyu sahneye ekliyoruz
+    player = this.physics.add.sprite(100, 450, 'player'); // Oyuncu
+    player.setBounce(0.2); // Zıplama sonrası sekme
+    player.setCollideWorldBounds(true); // Ekran dışına çıkmayı engelleme
+}
 
     // Klavye kontrollerini oluşturuyoruz
     cursors = this.input.keyboard.createCursorKeys();

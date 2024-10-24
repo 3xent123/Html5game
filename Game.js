@@ -29,8 +29,8 @@ var scoreText; // Ekranda gözükecek olan puan metni
 // Oyun grafikleri ve varlıkları yükleniyor
 function preload() {
     // Doğrudan depodan grafik yükleme
-    this.load.image('background', 'https://3xent123.github.io/Html5game/background.png');
-    this.load.image('player', 'https://3xent123.github.io/Html5game/samurai.png');
+    this.load.image('background', 'Background.png');
+    this.load.image('player', 'Samurai.png');
 }
 
 // Oyun yaratılıyor

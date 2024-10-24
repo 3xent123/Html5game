@@ -5,7 +5,8 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 }
+            gravity: { y: 300 },
+            debug: false
         }
     },
     scene: {
@@ -15,36 +16,54 @@ var config = {
     }
 };
 
-var player;
-var cursors;
 var game = new Phaser.Game(config);
 
 function preload() {
-    // Oyun için arka plan ve karakter grafiklerini yüklüyoruz
-    this.load.image('background', 'https://example.com/background.png');
-    this.load.image('player', 'https://example.com/player.png');
+    // Arka plan ve oyuncu karakter grafikleri
+    this.load.image('background', 'background.png');
+    this.load.image('player', 'samurai.png');
 }
 
 function create() {
-    // Arka plan ve oyuncuyu ekranda oluşturuyoruz
+    // Arka planı sahneye ekleyelim
     this.add.image(400, 300, 'background');
-    player = this.physics.add.sprite(400, 300, 'player');
 
-    // Ok tuşlarıyla oyuncuyu hareket ettirmek için kontrolleri ayarlıyoruz
+    // Oyuncu karakterini fiziksel özelliklerle ekleyelim
+    player = this.physics.add.sprite(100, 450, 'player');
+    player.setBounce(0.2); // Zıpladıktan sonra hafifçe sekiyor
+    player.setCollideWorldBounds(true); // Ekran dışına çıkmasını engeller
+
+    // Klavye kontrolleri
     cursors = this.input.keyboard.createCursorKeys();
 }
 
 function update() {
-    // Klavye ile oyuncu hareketini kontrol etme
+    // Klavyeden gelen girişlere göre oyuncunun hareketini kontrol ediyoruz
     if (cursors.left.isDown) {
-        player.setVelocityX(-160);
+        player.setVelocityX(-160); // Sol hareket
     } else if (cursors.right.isDown) {
-        player.setVelocityX(160);
+        player.setVelocityX(160); // Sağ hareket
     } else {
-        player.setVelocityX(0);
+        player.setVelocityX(0); // Durma
     }
 
-    if (cursors.up.isDown) {
-        player.setVelocityY(-160);
+    // Zıplama
+    if (cursors.up.isDown && player.body.touching.down) {
+        player.setVelocityY(-330); // Zıplama
     }
+}
+
+var score = 0;
+var scoreText;
+
+function create() {
+    // Skor metnini ekleyelim
+    scoreText = this.add.text(16, 16, 'Skor: 0', { fontSize: '32px', fill: '#fff' });
+}
+
+function update() {
+    // Oyun içindeki belirli olaylar olduğunda skoru artırabilirsiniz
+    // Örneğin bir düşman yok edildiğinde:
+    score += 10; // Puan artırma
+    scoreText.setText('Skor: ' + score); // Skoru güncelleme
 }

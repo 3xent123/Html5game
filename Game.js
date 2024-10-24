@@ -33,9 +33,9 @@ var gameOver = false;
 // Grafik dosyalarını yüklüyoruz
 function preload() {
     this.load.image('background', './background.png'); // Arka plan
-    this.load.image('player', './samurai.png'); // Oyuncu karakteri
-    this.load.image('trap', './trap.png'); // Tuzak
-    this.load.image('bomb', './bomb.png'); // Bomba
+    this.load.image('player', 'https://github.com/3xent123/Html5game/Samurai.png'); // Oyuncu karakteri
+    this.load.image('trap', 'https://github.com/3xent123/Html5game/Trap.png'); // Tuzak
+    this.load.image('bomb', 'https://github.com/3xent123/Html5game/Bomb.png'); // Bomba
 }
 
 // Oyunu kuruyoruz
